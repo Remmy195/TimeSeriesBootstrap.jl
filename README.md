@@ -1,6 +1,7 @@
 # TimeSeriesBootstrap.jl
 
 This project implements a **block bootstrap sampling framework** and statistical validation methods for evaluating time series data.
+Note this project is still in dev and not quite stable
 ---
 
 ## Key Features
