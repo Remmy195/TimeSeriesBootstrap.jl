@@ -7,7 +7,7 @@ and number of scenarios.
 """
 function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_scenarios::Int)
     n = length(residuals)
-    max_lag = min(n - 1, Int(floor(10 * log10(n))))
+    max_lag = min(n - 1, floor(Int, 10 * log10(n)))
 
     # Compute ACF and weighted ACF
     acf = compute_acf(residuals, max_lag)
@@ -18,6 +18,13 @@ function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_
     idx = findfirst(x -> abs(x) < threshold, weighted_acf)
     block_length = idx !== nothing ? idx : min(max_lag, forecast_horizon)
 
+    # Set Fmin as the block length
+    F_min = block_length
+
+    # Check forecast horizon
+    if forecast_horizon < F_min
+        throw(ArgumentError("Forecast horizon F must be at least $F_min to capture enough dependencies."))
+    end
 
     # Initialize output matrix
     bootstrapped_residuals = Matrix{Float64}(undef, forecast_horizon, num_scenarios)
@@ -46,3 +53,4 @@ function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_
 
     return bootstrapped_residuals
 end
+

@@ -20,6 +20,6 @@ Determine the threshold for block length computation.
 function compute_threshold(acf::Vector{Float64}, forecast_horizon::Int)
     max_acf = maximum(abs.(acf[2:end]))  # Ignore lag-0
     avg_acf = mean(abs.(acf[2:end]))
-    threshold = max(max_acf, avg_acf) / (log(forecast_horizon + 1))
+    threshold = max(max_acf, avg_acf) / (0.3 * log(forecast_horizon + 1))
     return threshold
 end
