@@ -17,15 +17,9 @@ function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_
     threshold = compute_threshold(acf, forecast_horizon)
     idx = findfirst(x -> abs(x) < threshold, weighted_acf)
     block_length = idx !== nothing ? idx : min(max_lag, forecast_horizon)
-
-    # Set Fmin as the block length
-    F_min = block_length
-
-    # Check forecast horizon
-    if forecast_horizon < F_min
-        throw(ArgumentError("Forecast horizon F must be at least $F_min to capture enough dependencies."))
-    end
-
+    
+    println("Computed block length: $block_length")
+    
     # Initialize output matrix
     bootstrapped_residuals = Matrix{Float64}(undef, forecast_horizon, num_scenarios)
 
@@ -34,8 +28,10 @@ function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_
         boot_residual = Float64[]
         i = 1
         while i <= forecast_horizon
+
             # Sample block length
-            sampled_length = min(rand(Geometric(1 / block_length)), forecast_horizon - i + 1)
+            # max(1,rand(Geometric(1 / block_length))) to prevent 0 sample lenght and being stuck in a loop
+            sampled_length = min(max(1,rand(Geometric(1 / block_length))), forecast_horizon - i + 1)
 
             # Sample starting index
             start_index = rand(1:n - sampled_length + 1)
