@@ -143,7 +143,7 @@ end
         # Run block bootstrap and capture the block length calculation
         acf = compute_acf(residuals, min(length(residuals) - 1, Int(floor(10 * log10(length(residuals))))))
         weighted_acf = [acf[k] * exp(-k / F) for k in 1:length(acf) - 1]
-        threshold = compute_threshold(acf, F)
+        threshold = compute_threshold(acf, F, 0.5)
         idx = findfirst(x -> abs(x) < threshold, weighted_acf)
         block_length = idx !== nothing ? idx : min(length(weighted_acf), F)
 
