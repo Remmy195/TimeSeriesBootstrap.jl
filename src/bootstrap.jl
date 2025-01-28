@@ -1,11 +1,10 @@
 using Distributions
 """
-    block_bootstrap(residuals, forecast_horizon, num_scenarios)
+    block_bootstrap(residuals, forecast_horizon, num_scenarios; alpha)
 
-Perform block bootstrap on the given residuals for a specified forecast horizon
-and the number of scenarios.
+Perform block bootstrap on the timeseries for a specified forecast horizon and the number of scenarios.
 """
-function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_scenarios::Int, alpha::Float64 = 0.5)
+function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_scenarios::Int; alpha::Float64 = 0.5)
     n = length(residuals)
     max_lag = min(n - 1, floor(Int, 10 * log10(n)))
 
