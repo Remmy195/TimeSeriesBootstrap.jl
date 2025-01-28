@@ -5,7 +5,7 @@ using Distributions
 Perform block bootstrap on the given residuals for a specified forecast horizon
 and number of scenarios.
 """
-function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_scenarios::Int)
+function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_scenarios::Int, alpha::Float64)
     n = length(residuals)
     max_lag = min(n - 1, floor(Int, 10 * log10(n)))
 
@@ -14,7 +14,7 @@ function block_bootstrap(residuals::Vector{Float64}, forecast_horizon::Int, num_
     weighted_acf = [acf[k] * exp(-k / forecast_horizon) for k in 1:max_lag]
 
     # Compute threshold and block length
-    threshold = compute_threshold(acf, forecast_horizon)
+    threshold = compute_threshold(acf, forecast_horizon, alpha)
     idx = findfirst(x -> abs(x) < threshold, weighted_acf)
     block_length = idx !== nothing ? idx : min(max_lag, forecast_horizon)
     
