@@ -13,7 +13,7 @@ function compute_acf(residuals::Vector{Float64}, max_lag::Int)
 end
 
 """
-    compute_threshold(acf, forecast_horizon)
+    compute_threshold(acf, forecast_horizon, alpha)
 
 Determine the threshold for block length computation.
 """
